@@ -1,0 +1,23 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: banana-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: banana
+      MYSQL_USER: hayeon
+      MYSQL_PASSWORD: banana1q2w3e4r
+      MYSQL_ROOT_PASSWORD: banana1q2w3e4r
+    ports:
+      - "3307:3306"
+    volumes:
+      - market_mysql:/var/lib/mysql
+
+  redis:
+    image: redis:7
+    container_name: market-redis
+    ports:
+      - "6379:6379"
+
+volumes:
+  market_mysql:
