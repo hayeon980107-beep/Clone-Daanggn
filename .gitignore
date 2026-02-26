@@ -96,4 +96,5 @@ redis-data/
 ####################################
 uploads/
 
+docker*
 docker-compose.yml
