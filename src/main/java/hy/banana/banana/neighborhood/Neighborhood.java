@@ -37,4 +37,10 @@ public class Neighborhood {
         @Column(nullable = false)
         private boolean isPrimary;
     }
+
+    public static Neighborhood create(String name) {
+        Neighborhood neighborhood = new Neighborhood();
+        neighborhood.name = name;
+        return neighborhood;
+    }
 }

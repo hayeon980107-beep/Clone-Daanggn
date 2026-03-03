@@ -38,4 +38,22 @@ public class User extends BaseEntity {
     private UserStatus status;
 
     private LocalDateTime lastLoginAt;
+
+    public static User create(
+            String email,
+            String passwordHash,
+            String nickName,
+            String phoneNum,
+            String address
+    ) {
+        User user = new User();
+        user.email = email;
+        user.passwordHash = passwordHash;
+        user.nickName = nickName;
+        user.phoneNum = phoneNum;
+        user.address = address;
+        user.status = UserStatus.ACTIVE;
+        user.lastLoginAt = null;
+        return user;
+    }
 }
