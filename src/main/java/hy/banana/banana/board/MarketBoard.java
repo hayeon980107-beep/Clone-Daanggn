@@ -56,4 +56,18 @@ public class MarketBoard extends BaseEntity {
     public void changeState(BoardState state) {
         this.state = state;
     }
+
+    public static MarketBoard create(User user, Category category, Neighborhood neighborhood,
+                                     String title, String content, int price) {
+        MarketBoard b = new MarketBoard();
+        b.user = user;
+        b.category = category;
+        b.neighborhood = neighborhood;
+        b.title = title;
+        b.content = content;
+        b.price = price;
+        b.state = BoardState.SELLING;
+        b.viewCount = 0;
+        return b;
+    }
 }
