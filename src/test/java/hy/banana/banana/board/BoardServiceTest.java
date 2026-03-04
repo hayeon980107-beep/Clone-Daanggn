@@ -3,6 +3,7 @@ package hy.banana.banana.board;
 import hy.banana.banana.TestFactory;
 import hy.banana.banana.board.dto.BoardCreateRequest;
 import hy.banana.banana.board.dto.BoardCreateResponse;
+import hy.banana.banana.board.dto.BoardGetOneResponse;
 import hy.banana.banana.category.Category;
 import hy.banana.banana.category.CategoryRepository;
 import hy.banana.banana.neighborhood.Neighborhood;
@@ -66,5 +67,26 @@ public class BoardServiceTest {
         MarketBoard saved = boardRepository.findById(res.boardId()).orElseThrow();
         assertThat(saved.getTitle()).isEqualTo("제목");
         assertThat(saved.getPrice()).isEqualTo(1000);
+    }
+
+    @Test
+    void 게시글_단건_조회() {
+        // given
+        User user = userRepository.save(TestFactory.user());
+        Category category = categoryRepository.save(TestFactory.category());
+        Neighborhood neighborhood = neighborhoodRepository.save(TestFactory.neighborhood());
+
+        MarketBoard board = boardRepository.save(
+                MarketBoard.create(user, category, neighborhood, "제목", "내용", 1000)
+        );
+
+        Long req = board.getBoardId();
+
+        // when
+        BoardGetOneResponse res = boardService.getBoard(req);
+
+        // then
+        assertThat(res.title()).isEqualTo("제목");
+        assertThat(res.userNickName()).isEqualTo(user.getNickName());
     }
 }
