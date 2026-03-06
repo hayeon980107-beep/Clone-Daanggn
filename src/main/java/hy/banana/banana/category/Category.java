@@ -18,7 +18,6 @@ import lombok.NoArgsConstructor;
 public class Category {
 
         @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long categoryId;
 
         // 카테고리 이름 (디지털기기, 동네질문 등)

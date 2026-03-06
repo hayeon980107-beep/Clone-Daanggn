@@ -3,6 +3,7 @@ package hy.banana.banana.board;
 import hy.banana.banana.board.dto.*;
 import hy.banana.banana.category.Category;
 import hy.banana.banana.category.CategoryRepository;
+import hy.banana.banana.category.CategoryType;
 import hy.banana.banana.neighborhood.Neighborhood;
 import hy.banana.banana.neighborhood.NeighborhoodRepository;
 import hy.banana.banana.user.User;
@@ -65,10 +66,10 @@ public class BoardService {
         );
     }
 
-    public BoardListResponse getBoards(Long neiId, int page, int size) {
-        PageRequest pageable = PageRequest.of(page, size);
+    public BoardListResponse getBoards(BoardListRequest request) {
+        PageRequest pageable = PageRequest.of(request.page(), request.size());
 
-        Page<BoardListItemResponse> result = boardRepository.findList(neiId, pageable);
+        Page<BoardListItemResponse> result = boardRepository.findList(request.neiId(), pageable, request.categoryId());
 
         return new BoardListResponse(
                 result.getContent(),

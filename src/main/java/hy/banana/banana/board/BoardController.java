@@ -1,9 +1,6 @@
 package hy.banana.banana.board;
 
-import hy.banana.banana.board.dto.BoardCreateRequest;
-import hy.banana.banana.board.dto.BoardCreateResponse;
-import hy.banana.banana.board.dto.BoardGetOneResponse;
-import hy.banana.banana.board.dto.BoardListResponse;
+import hy.banana.banana.board.dto.*;
 import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -29,11 +26,7 @@ public class BoardController {
     }
 
     @GetMapping
-    public BoardListResponse getBoards(
-            @RequestParam Long neiId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size
-    ) {
-        return boardService.getBoards(neiId, page, size);
+    public BoardListResponse getBoards(BoardListRequest request) {
+        return boardService.getBoards(request);
     }
 }
