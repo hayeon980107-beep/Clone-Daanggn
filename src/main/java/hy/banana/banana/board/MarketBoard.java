@@ -9,6 +9,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "market_board",
         indexes = {
@@ -44,10 +46,19 @@ public class MarketBoard extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 10)
-    private BoardState state; // SELLING, RESERVED, SOLD
+    private BoardState state = BoardState.SELLING; // SELLING, RESERVED, SOLD
 
     @Column(nullable = false)
     private int price;
+
+    @Column(nullable = false)
+    private LocalDateTime bumpedAt;
+
+    @Column(nullable = false)
+    private int bumpCount;
+
+    @Column
+    private LocalDateTime sold_at;
 
     public void increaseViewCount() {
         this.viewCount++;
@@ -58,7 +69,7 @@ public class MarketBoard extends BaseEntity {
     }
 
     public static MarketBoard create(User user, Category category, Neighborhood neighborhood,
-                                     String title, String content, int price) {
+                                     String title, String content, int price, LocalDateTime bumpedAt) {
         MarketBoard b = new MarketBoard();
         b.user = user;
         b.category = category;
@@ -68,6 +79,8 @@ public class MarketBoard extends BaseEntity {
         b.price = price;
         b.state = BoardState.SELLING;
         b.viewCount = 0;
+        b.bumpedAt = bumpedAt;
+        b.bumpCount = 0;
         return b;
     }
 }

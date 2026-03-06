@@ -8,5 +8,12 @@ public record BoardListRequest(
         Integer page,
         Integer size
 ) {
+    public int getPage() {
+        return page == null ? 0 : page;
+    }
+
+    public int getSize() {
+        return size == null ? 20 : size;
+    }
 }
 

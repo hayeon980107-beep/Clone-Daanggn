@@ -17,7 +17,7 @@ public interface MarketBoardRepository extends JpaRepository<MarketBoard, Long> 
      */
 
     // likeCount의 경우 서비스에서 별개의 레포지토리로 가져오는 것 보다 이렇게 한번에 쿼리로 가져오는 것이 좋음
-    // 현재 카테고리 id = one 인데 나중에 && in (세부 선택한 카테고리들) 도 가져와야함
+    // 현재 카테고리 id 단건 인데 나중에 in (여러개) 로 수정 필요
     @Query(
             value = """
     select new hy.banana.banana.board.dto.BoardListItemResponse(
@@ -37,7 +37,7 @@ public interface MarketBoardRepository extends JpaRepository<MarketBoard, Long> 
     where n.neiId = :neiId
     and (:categoryId is null or c.categoryId = :categoryId)
     group by b.boardId, b.title, b.price, n.name, u.nickName, b.viewCount
-    order by b.createdAt desc
+    order by b.bumpedAt desc, b.createdAt desc
     """,
             countQuery = """
     select count(b)

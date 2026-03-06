@@ -14,6 +14,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.Date;
+
 /**
  * history
  * 26.03.02 게시글 저장
@@ -43,7 +46,7 @@ public class BoardService {
                 .orElseThrow(() -> new IllegalArgumentException("동네 없음"));
 
         MarketBoard board = MarketBoard.create(user, category, neighborhood,
-                req.title(), req.content(), req.price());
+                req.title(), req.content(), req.price(), LocalDateTime.now());
 
         MarketBoard saved = boardRepository.save(board);
         return new BoardCreateResponse(saved.getBoardId());
@@ -67,7 +70,7 @@ public class BoardService {
     }
 
     public BoardListResponse getBoards(BoardListRequest request) {
-        PageRequest pageable = PageRequest.of(request.page(), request.size());
+        PageRequest pageable = PageRequest.of(request.getPage(), request.getSize());
 
         Page<BoardListItemResponse> result = boardRepository.findList(request.neiId(), pageable, request.categoryId());
 
