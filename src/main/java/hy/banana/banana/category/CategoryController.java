@@ -21,8 +21,8 @@ public class CategoryController {
 
     @GetMapping
     public List<CategoryItemResponse> getCategory(
-           @RequestParam CategoryType categoryType
+           @RequestParam CategoryType type
     ) {
-        return categoryService.getCategoryList(categoryType);
+        return categoryService.getCategoryList(type);
     }
 }

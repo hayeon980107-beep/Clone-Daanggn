@@ -32,7 +32,7 @@ public class CategoryService {
     private final PostLikeRepository postLikeRepository;
 
     public List<CategoryItemResponse> getCategoryList(CategoryType categoryType) {
-
+        System.out.println(categoryRepository.findByType(categoryType));
         return categoryRepository.findByType(categoryType)
                 .stream()
                 .map(c -> new CategoryItemResponse(

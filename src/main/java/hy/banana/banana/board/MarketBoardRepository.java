@@ -1,7 +1,6 @@
 package hy.banana.banana.board;
 
 import hy.banana.banana.board.dto.BoardListItemResponse;
-import hy.banana.banana.category.CategoryType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,6 +17,7 @@ public interface MarketBoardRepository extends JpaRepository<MarketBoard, Long> 
      */
 
     // likeCount의 경우 서비스에서 별개의 레포지토리로 가져오는 것 보다 이렇게 한번에 쿼리로 가져오는 것이 좋음
+    // 현재 카테고리 id = one 인데 나중에 && in (세부 선택한 카테고리들) 도 가져와야함
     @Query(
             value = """
     select new hy.banana.banana.board.dto.BoardListItemResponse(
