@@ -58,14 +58,24 @@ public class MarketBoard extends BaseEntity {
     private int bumpCount;
 
     @Column
-    private LocalDateTime sold_at;
+    private LocalDateTime soldAt;
 
     public void increaseViewCount() {
         this.viewCount++;
     }
 
-    public void changeState(BoardState state) {
-        this.state = state;
+    public void markReserved() {
+        this.state = BoardState.RESERVED;
+    }
+
+    public void markSold() {
+        this.state = BoardState.SOLD;
+        this.soldAt = LocalDateTime.now();
+    }
+
+    public void markSelling() {
+        this.state = BoardState.SELLING;
+        this.soldAt = null;
     }
 
     public static MarketBoard create(User user, Category category, Neighborhood neighborhood,
@@ -82,5 +92,12 @@ public class MarketBoard extends BaseEntity {
         b.bumpedAt = bumpedAt;
         b.bumpCount = 0;
         return b;
+    }
+
+    public void update(String title, String content, int price, Category category) {
+        this.title = title;
+        this.content = content;
+        this.price = price;
+        this.category = category;
     }
 }

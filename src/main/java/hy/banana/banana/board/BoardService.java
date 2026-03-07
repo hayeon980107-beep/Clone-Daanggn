@@ -19,8 +19,10 @@ import java.util.Date;
 
 /**
  * history
- * 26.03.02 게시글 저장
- * 26.03.03 게시글 조회 - 단건, 다건, 페이징
+ * 26.03.02 게시글 저장 구현
+ * 26.03.03 게시글 조회 - 단건, 다건, 페이징 구현
+ * 26.03.07 게시글 수정, 삭제, 상태변경 구현
+ * 26.03.07 게시글 조회주 증가 추가
  */
 @Service
 @RequiredArgsConstructor
@@ -52,10 +54,12 @@ public class BoardService {
         return new BoardCreateResponse(saved.getBoardId());
     }
 
+    // 게시글 단건 조회
     public BoardGetOneResponse getBoard(Long boardId) {
-
         MarketBoard board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new RuntimeException("게시글 없음"));
+
+        boardRepository.increaseViewCount(boardId);
 
         return new BoardGetOneResponse(
                 board.getBoardId(),
@@ -82,5 +86,54 @@ public class BoardService {
                 result.getTotalPages(),
                 result.hasNext()
         );
+    }
+
+    @Transactional
+    public void updateBoard(Long userId, Long boardId, BoardUpdateRequest request) {
+        MarketBoard board = boardRepository.findById(boardId).orElseThrow();
+
+        if(!board.getUser().getUserId().equals(userId)){
+            throw new IllegalStateException("작성자만 수정 가능");
+        }
+
+        Category category = categoryRepository.findById(request.categoryId()).orElseThrow();
+
+        board.update(
+                request.title(),
+                request.content(),
+                request.price(),
+                category
+        );
+    }
+
+    @Transactional
+    public void changeState(Long userId, Long boardId, BoardUpdateStateRequest request)
+    {
+        MarketBoard board = boardRepository.findById(boardId).orElseThrow();
+
+        if(!board.getUser().getUserId().equals(userId)) {
+            throw new IllegalStateException("작성자만 수정 가능");
+        }
+
+        /**
+         * 도메인 로직이 엔티티에 있음
+         * 서비스가 깔끔
+         */
+        switch (request.state()) {
+            case SELLING -> board.markSelling();
+            case RESERVED -> board.markReserved();
+            case SOLD -> board.markSold();
+        }
+    }
+
+    @Transactional
+    public void deleteBoard(Long userId, Long boardId) {
+        MarketBoard board = boardRepository.findById(boardId).orElseThrow();
+
+        if(!board.getUser().getUserId().equals(userId)) {
+            throw new IllegalStateException("작성자만 삭제 가능");
+        }
+
+        boardRepository.delete(board);
     }
 }

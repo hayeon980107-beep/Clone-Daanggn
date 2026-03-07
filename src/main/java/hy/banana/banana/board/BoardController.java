@@ -29,4 +29,19 @@ public class BoardController {
     public BoardListResponse getBoards(BoardListRequest request) {
         return boardService.getBoards(request);
     }
+
+    @PatchMapping("/{boardId}")
+    public void updateBoard(@RequestHeader("X-USER-ID") Long userId, @PathVariable Long boardId, BoardUpdateRequest request) {
+        boardService.updateBoard(userId, boardId, request);
+    }
+
+    @PatchMapping("/{boardId}/state")
+    public void updateState(@RequestHeader("X-USER-ID") Long userId, @PathVariable Long boardId, BoardUpdateStateRequest request) {
+        boardService.changeState(userId, boardId, request);
+    }
+
+    @DeleteMapping("/{boardId}")
+    public void deleteBoard(@RequestHeader("X-USER-ID") Long userId, @PathVariable Long boardId) {
+        boardService.deleteBoard(userId, boardId);
+    }
 }
