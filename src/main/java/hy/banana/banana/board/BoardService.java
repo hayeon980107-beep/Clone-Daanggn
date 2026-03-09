@@ -4,6 +4,8 @@ import hy.banana.banana.board.dto.*;
 import hy.banana.banana.category.Category;
 import hy.banana.banana.category.CategoryRepository;
 import hy.banana.banana.category.CategoryType;
+import hy.banana.banana.common.exception.CustomException;
+import hy.banana.banana.common.exception.ErrorCode;
 import hy.banana.banana.neighborhood.Neighborhood;
 import hy.banana.banana.neighborhood.NeighborhoodRepository;
 import hy.banana.banana.user.User;
@@ -39,13 +41,13 @@ public class BoardService {
     public BoardCreateResponse create(Long userId, BoardCreateRequest req) {
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("유저 없음"));
+                .orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
 
         Category category = categoryRepository.findById(req.categoryId())
-                .orElseThrow(() -> new IllegalArgumentException("카테고리 없음"));
+                .orElseThrow(() -> new CustomException(ErrorCode.CATEGORY_NOT_FOUND));
 
         Neighborhood neighborhood = neighborhoodRepository.findById(req.neiId())
-                .orElseThrow(() -> new IllegalArgumentException("동네 없음"));
+                .orElseThrow(() -> new CustomException(ErrorCode.NEIGHBORHOOD_NOT_FOUND));
 
         MarketBoard board = MarketBoard.create(user, category, neighborhood,
                 req.title(), req.content(), req.price(), LocalDateTime.now());
@@ -55,11 +57,13 @@ public class BoardService {
     }
 
     // 게시글 단건 조회
+    @Transactional
     public BoardGetOneResponse getBoard(Long boardId) {
-        MarketBoard board = boardRepository.findById(boardId)
-                .orElseThrow(() -> new RuntimeException("게시글 없음"));
-
         boardRepository.increaseViewCount(boardId);
+
+        MarketBoard board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
+
 
         return new BoardGetOneResponse(
                 board.getBoardId(),
@@ -93,7 +97,7 @@ public class BoardService {
         MarketBoard board = boardRepository.findById(boardId).orElseThrow();
 
         if(!board.getUser().getUserId().equals(userId)){
-            throw new IllegalStateException("작성자만 수정 가능");
+            throw new CustomException(ErrorCode.FORBIDDEN);
         }
 
         Category category = categoryRepository.findById(request.categoryId()).orElseThrow();
@@ -112,7 +116,7 @@ public class BoardService {
         MarketBoard board = boardRepository.findById(boardId).orElseThrow();
 
         if(!board.getUser().getUserId().equals(userId)) {
-            throw new IllegalStateException("작성자만 수정 가능");
+            throw new CustomException(ErrorCode.FORBIDDEN);
         }
 
         /**
@@ -131,7 +135,7 @@ public class BoardService {
         MarketBoard board = boardRepository.findById(boardId).orElseThrow();
 
         if(!board.getUser().getUserId().equals(userId)) {
-            throw new IllegalStateException("작성자만 삭제 가능");
+            throw new CustomException(ErrorCode.FORBIDDEN);
         }
 
         boardRepository.delete(board);

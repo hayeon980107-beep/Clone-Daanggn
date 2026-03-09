@@ -7,6 +7,7 @@ import hy.banana.banana.board.dto.BoardGetOneResponse;
 import hy.banana.banana.board.dto.BoardListResponse;
 import hy.banana.banana.category.dto.CategoryItemResponse;
 import hy.banana.banana.category.dto.CategoryListResponse;
+import hy.banana.banana.common.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -20,9 +21,9 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping
-    public List<CategoryItemResponse> getCategory(
+    public ApiResponse<List<CategoryItemResponse>> getCategory(
            @RequestParam CategoryType type
     ) {
-        return categoryService.getCategoryList(type);
+        return ApiResponse.success(categoryService.getCategoryList(type));
     }
 }

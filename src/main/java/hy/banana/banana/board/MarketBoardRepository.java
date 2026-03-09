@@ -52,9 +52,9 @@ public interface MarketBoardRepository extends JpaRepository<MarketBoard, Long> 
 
     @Modifying
     @Query("""
-update MarketBoard b
-set b.viewCount = b.viewCount + 1
-where b.boardId = :boardId
-""")
+    update MarketBoard b
+    set b.viewCount = b.viewCount + 1
+    where b.boardId = :boardId
+    """)
     void increaseViewCount(@Param("boardId") Long boardId);
 }
