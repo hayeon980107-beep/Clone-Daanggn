@@ -2,6 +2,7 @@ package hy.banana.banana.common.exception;
 
 import hy.banana.banana.common.response.ApiResponse;
 import hy.banana.banana.common.response.ErrorResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;

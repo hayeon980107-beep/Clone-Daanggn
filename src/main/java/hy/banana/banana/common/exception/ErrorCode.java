@@ -8,7 +8,10 @@ public enum ErrorCode {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER_NOT_FOUND", "사용자가 존재하지 않습니다."),
     NEIGHBORHOOD_NOT_FOUND(HttpStatus.NOT_FOUND, "NEIGHBORHOOD_NOT_FOUND", "동네가 존재하지 않습니다."),
     FORBIDDEN(HttpStatus.FORBIDDEN, "FORBIDDEN", "권한이 없습니다."),
-    INVALID_INPUT(HttpStatus.BAD_REQUEST, "INVALID_INPUT", "잘못된 요청입니다.");
+    INVALID_INPUT(HttpStatus.BAD_REQUEST, "INVALID_INPUT", "잘못된 요청입니다."),
+    DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, "DUPLICATE_EMAIL","이미 사용 중인 이메일입니다."),
+    DUPLICATE_NICKNAME(HttpStatus.BAD_REQUEST, "DUPLICATE_NICKNAME","이미 사용 중인 닉네임입니다.")
+    ;
 
     private final HttpStatus status;
     private final String code;
