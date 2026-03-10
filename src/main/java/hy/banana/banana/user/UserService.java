@@ -2,6 +2,9 @@ package hy.banana.banana.user;
 
 import hy.banana.banana.common.exception.CustomException;
 import hy.banana.banana.common.exception.ErrorCode;
+import hy.banana.banana.common.jwt.JwtProvider;
+import hy.banana.banana.user.dto.LoginRequest;
+import hy.banana.banana.user.dto.LoginResponse;
 import hy.banana.banana.user.dto.SignUpRequest;
 import hy.banana.banana.user.dto.SignUpResponse;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +19,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtProvider jwtProvider;
 
     @Transactional
     public SignUpResponse signUp(SignUpRequest request) {
@@ -44,6 +48,27 @@ public class UserService {
                 savedUser.getUserId(),
                 savedUser.getEmail(),
                 savedUser.getNickName()
+        );
+    }
+
+    public LoginResponse login(LoginRequest request) {
+        User user = userRepository.findByEmail(request.email())
+                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_LOGIN));
+
+        if(!passwordEncoder.matches(request.password(), user.getPasswordHash())) {
+            throw new CustomException(ErrorCode.INVALID_LOGIN);
+        }
+
+        String accessToken = jwtProvider.createAccessToken(
+                user.getUserId(),
+                user.getEmail()
+        );
+
+        return new LoginResponse(
+                user.getUserId(),
+                user.getNickName(),
+                user.getEmail(),
+                accessToken
         );
     }
 }

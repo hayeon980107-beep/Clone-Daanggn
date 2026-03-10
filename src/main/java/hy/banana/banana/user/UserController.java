@@ -1,6 +1,8 @@
 package hy.banana.banana.user;
 
 import hy.banana.banana.common.response.ApiResponse;
+import hy.banana.banana.user.dto.LoginRequest;
+import hy.banana.banana.user.dto.LoginResponse;
 import hy.banana.banana.user.dto.SignUpRequest;
 import hy.banana.banana.user.dto.SignUpResponse;
 import jakarta.validation.Valid;
@@ -22,5 +24,12 @@ public class UserController {
             @RequestBody @Valid SignUpRequest request
     ) {
         return ApiResponse.success(userService.signUp(request));
+    }
+
+    @PostMapping("/login")
+    public ApiResponse<LoginResponse> login(
+            @RequestBody @Valid LoginRequest request
+            ) {
+        return ApiResponse.success(userService.login(request));
     }
 }

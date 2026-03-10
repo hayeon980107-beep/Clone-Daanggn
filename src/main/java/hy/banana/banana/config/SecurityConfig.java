@@ -26,7 +26,7 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/boards/**",
                                 "/category/**",
-                                "user/**"
+                                "/user/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

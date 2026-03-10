@@ -10,7 +10,8 @@ public enum ErrorCode {
     FORBIDDEN(HttpStatus.FORBIDDEN, "FORBIDDEN", "권한이 없습니다."),
     INVALID_INPUT(HttpStatus.BAD_REQUEST, "INVALID_INPUT", "잘못된 요청입니다."),
     DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, "DUPLICATE_EMAIL","이미 사용 중인 이메일입니다."),
-    DUPLICATE_NICKNAME(HttpStatus.BAD_REQUEST, "DUPLICATE_NICKNAME","이미 사용 중인 닉네임입니다.")
+    DUPLICATE_NICKNAME(HttpStatus.BAD_REQUEST, "DUPLICATE_NICKNAME","이미 사용 중인 닉네임입니다."),
+    INVALID_LOGIN(HttpStatus.BAD_REQUEST, "INVALID_LOGIN","이메일 또는 비밀번호가 올바르지 않습니다."),
     ;
 
     private final HttpStatus status;
