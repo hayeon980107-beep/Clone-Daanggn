@@ -37,11 +37,23 @@ public class BoardService {
     private final NeighborhoodRepository neighborhoodRepository;
     private final PostLikeRepository postLikeRepository;
 
+    public void checkAuth(User user) {
+        if (user.isBanned()) {
+            throw new CustomException(ErrorCode.BANNED_USER);
+        }
+
+        if (user.isWithdrawn()) {
+            throw new CustomException(ErrorCode.WITHDRAWN_USER);
+        }
+    }
+
     @Transactional(readOnly = false)
     public BoardCreateResponse create(Long userId, BoardCreateRequest req) {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
+
+        checkAuth(user);
 
         Category category = categoryRepository.findById(req.categoryId())
                 .orElseThrow(() -> new CustomException(ErrorCode.CATEGORY_NOT_FOUND));
@@ -96,6 +108,8 @@ public class BoardService {
     public void updateBoard(Long userId, Long boardId, BoardUpdateRequest request) {
         MarketBoard board = boardRepository.findById(boardId).orElseThrow();
 
+        checkAuth(board.getUser());
+
         if(!board.getUser().getUserId().equals(userId)){
             throw new CustomException(ErrorCode.FORBIDDEN);
         }
@@ -115,6 +129,8 @@ public class BoardService {
     {
         MarketBoard board = boardRepository.findById(boardId).orElseThrow();
 
+        checkAuth(board.getUser());
+
         if(!board.getUser().getUserId().equals(userId)) {
             throw new CustomException(ErrorCode.FORBIDDEN);
         }
@@ -133,6 +149,8 @@ public class BoardService {
     @Transactional
     public void deleteBoard(Long userId, Long boardId) {
         MarketBoard board = boardRepository.findById(boardId).orElseThrow();
+
+        checkAuth(board.getUser());
 
         if(!board.getUser().getUserId().equals(userId)) {
             throw new CustomException(ErrorCode.FORBIDDEN);

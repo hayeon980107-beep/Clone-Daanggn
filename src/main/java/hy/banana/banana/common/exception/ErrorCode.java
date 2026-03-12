@@ -15,6 +15,11 @@ public enum ErrorCode {
     DUPLICATE_NICKNAME(HttpStatus.BAD_REQUEST, "DUPLICATE_NICKNAME", "이미 사용 중인 닉네임입니다."),
     INVALID_LOGIN(HttpStatus.BAD_REQUEST, "INVALID_LOGIN", "이메일 또는 비밀번호가 올바르지 않습니다."),
 
+    // user status
+    BANNED_USER(HttpStatus.FORBIDDEN, "BANNED_USER", "정지된 사용자입니다."),
+    WITHDRAWN_USER(HttpStatus.FORBIDDEN, "WITHDRAWN_USER", "탈퇴한 사용자입니다."),
+    INVALID_USER_STATUS(HttpStatus.BAD_REQUEST, "INVALID_USER_STATUS", "변경할 수 없는 사용자 상태입니다."),
+
     // neighborhood
     NEIGHBORHOOD_NOT_FOUND(HttpStatus.NOT_FOUND, "NEIGHBORHOOD_NOT_FOUND", "동네가 존재하지 않습니다."),
 

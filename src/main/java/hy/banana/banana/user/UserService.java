@@ -3,10 +3,7 @@ package hy.banana.banana.user;
 import hy.banana.banana.common.exception.CustomException;
 import hy.banana.banana.common.exception.ErrorCode;
 import hy.banana.banana.common.jwt.JwtProvider;
-import hy.banana.banana.user.dto.LoginRequest;
-import hy.banana.banana.user.dto.LoginResponse;
-import hy.banana.banana.user.dto.SignUpRequest;
-import hy.banana.banana.user.dto.SignUpResponse;
+import hy.banana.banana.user.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -70,5 +67,37 @@ public class UserService {
                 user.getEmail(),
                 accessToken
         );
+    }
+
+    @Transactional
+    public void activate(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        if (user.isWithdrawn()) {
+            throw new CustomException(ErrorCode.INVALID_USER_STATUS);
+        }
+
+        user.activate();
+    }
+
+    @Transactional
+    public void ban(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        if (user.isWithdrawn()) {
+            throw new CustomException(ErrorCode.INVALID_USER_STATUS);
+        }
+
+        user.ban();
+    }
+
+    @Transactional
+    public void withdraw(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        user.withdraw();
     }
 }

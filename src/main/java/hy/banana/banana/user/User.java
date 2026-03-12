@@ -1,5 +1,6 @@
 package hy.banana.banana.user;
 
+import hy.banana.banana.board.BoardState;
 import hy.banana.banana.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -39,6 +40,10 @@ public class User extends BaseEntity {
 
     private LocalDateTime lastLoginAt;
 
+    private LocalDateTime bannedAt;
+
+    private LocalDateTime withdrawnAt;
+
     public static User create(
             String email,
             String passwordHash,
@@ -55,5 +60,35 @@ public class User extends BaseEntity {
         user.status = UserStatus.ACTIVE;
         user.lastLoginAt = null;
         return user;
+    }
+
+    public void ban() {
+        this.status = UserStatus.BAN;
+        this.bannedAt = LocalDateTime.now();
+        this.withdrawnAt = null;
+    }
+
+    public void withdraw() {
+        this.status = UserStatus.WITHDRAW;
+        this.withdrawnAt = LocalDateTime.now();
+        this.bannedAt = null;
+    }
+
+    public void activate() {
+        this.status = UserStatus.ACTIVE;
+        this.bannedAt = null;
+        this.withdrawnAt = null;
+    }
+
+    public boolean isActive() {
+        return this.status == UserStatus.ACTIVE;
+    }
+
+    public boolean isBanned() {
+        return this.status == UserStatus.BAN;
+    }
+
+    public boolean isWithdrawn() {
+        return this.status == UserStatus.WITHDRAW;
     }
 }
