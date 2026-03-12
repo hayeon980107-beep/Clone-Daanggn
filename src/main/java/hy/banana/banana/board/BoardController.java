@@ -1,10 +1,12 @@
 package hy.banana.banana.board;
 
 import hy.banana.banana.board.dto.*;
+import hy.banana.banana.common.jwt.CustomUserDetails;
 import hy.banana.banana.common.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,10 +17,10 @@ public class BoardController {
 
     @PostMapping
     public ApiResponse<BoardCreateResponse> create(
-            @RequestHeader("X-USER-ID") Long userId,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
             @Valid @RequestBody BoardCreateRequest request
     ) {
-        return ApiResponse.success(boardService.create(userId, request));
+        return ApiResponse.success(boardService.create(userDetails.getUserId(), request));
     }
 
     @GetMapping("/{boardId}")
@@ -32,20 +34,24 @@ public class BoardController {
     }
 
     @PatchMapping("/{boardId}")
-    public ApiResponse<Void> updateBoard(@RequestHeader("X-USER-ID") Long userId, @PathVariable Long boardId, BoardUpdateRequest request) {
-        boardService.updateBoard(userId, boardId, request);
+    public ApiResponse<Void> updateBoard( @AuthenticationPrincipal CustomUserDetails userDetails,
+                                          @PathVariable Long boardId,
+                                          @Valid @RequestBody BoardUpdateRequest request) {
+        boardService.updateBoard(userDetails.getUserId(), boardId, request);
         return ApiResponse.success(null);
     }
 
     @PatchMapping("/{boardId}/state")
-    public ApiResponse<Void> updateState(@RequestHeader("X-USER-ID") Long userId, @PathVariable Long boardId, BoardUpdateStateRequest request) {
-        boardService.changeState(userId, boardId, request);
+    public ApiResponse<Void> updateState( @AuthenticationPrincipal CustomUserDetails userDetails,
+                                          @PathVariable Long boardId,
+                                          @Valid @RequestBody BoardUpdateStateRequest request) {
+        boardService.changeState(userDetails.getUserId(), boardId, request);
         return ApiResponse.success(null);
     }
 
     @DeleteMapping("/{boardId}")
-    public ApiResponse<Void> deleteBoard(@RequestHeader("X-USER-ID") Long userId, @PathVariable Long boardId) {
-        boardService.deleteBoard(userId, boardId);
+    public ApiResponse<Void> deleteBoard(@AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable Long boardId) {
+        boardService.deleteBoard(userDetails.getUserId(), boardId);
         return ApiResponse.success(null);
     }
 }
